@@ -21,6 +21,8 @@ class _DataScreenState extends State<DataScreen> {
 
   String profileURL1 = '';
 
+  List<String> imageUrls = [];
+
   bool isLoading = true;
   String errorMessage = '';
 
@@ -49,6 +51,8 @@ class _DataScreenState extends State<DataScreen> {
 
       final response7 =
           await http.get(Uri.parse('http://192.168.1.6:5200/following-count'));
+        
+      final response8 = await http.get(Uri.parse('http://192.168.1.11:5000/images'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -78,6 +82,20 @@ class _DataScreenState extends State<DataScreen> {
       });
     }
   }
+
+   if (response.statusCode == 200) {
+        final List<String> urls = List<String>.from(json.decode(response.body));
+        setState(() {
+          imageUrls = urls;
+        });
+      } else {
+        print('Failed to fetch image URLs: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching image URLs: $error');
+    }
+  
+
 
   @override
   void initState() {
