@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-hii
+import 'package:ssip/pages/ofimage.dart';
 
 class DataScreen extends StatefulWidget {
   @override
@@ -15,15 +15,12 @@ class _DataScreenState extends State<DataScreen> {
   Map<String, dynamic> dict2 = {};
   Map<String, dynamic> dict3 = {};
   String profileURL = '';
-
   Map<String, dynamic> dict4 = {};
   Map<String, dynamic> dict5 = {};
   Map<String, dynamic> dict6 = {};
   Map<String, dynamic> dict7 = {};
-
-  String profileURL1 = '';
-
   List<String> imageUrls = [];
+
 
   bool isLoading = true;
   String errorMessage = '';
@@ -31,32 +28,34 @@ class _DataScreenState extends State<DataScreen> {
   Future<void> fetchData() async {
     try {
       final response =
-          await http.get(Uri.parse('http://192.168.1.6:5200/number-frequency'));
+          await http.get(Uri.parse('http://192.168.0.109:5200/number-frequency'));
 
       final response1 = await http
-          .get(Uri.parse('http://192.168.1.6:5200/hashtag-frequency'));
+          .get(Uri.parse('http://192.168.0.109:5200/hashtag-frequency'));
 
       final response2 = await http
-          .get(Uri.parse('http://192.168.1.6:5200/location-frequency'));
+          .get(Uri.parse('http://192.168.0.109:5200/location-frequency'));
 
       final response3 =
-          await http.get(Uri.parse('http://192.168.1.6:5200/profile-picture'));
+          await http.get(Uri.parse('http://192.168.0.109:5200/profile-picture'));
 
       final response4 =
-          await http.get(Uri.parse('http://192.168.1.6:5200/offensive-bio'));
+          await http.get(Uri.parse('http://192.168.0.109:5200/offensive-bio'));
 
       final response5 = await http
-          .get(Uri.parse('http://192.168.1.6:5200/offensive-comments'));
+          .get(Uri.parse('http://192.168.0.109:5200/offensive-comments'));
 
       final response6 =
-          await http.get(Uri.parse('http://192.168.1.6:5200/follower-count'));
+          await http.get(Uri.parse('http://192.168.0.109:5200/follower-count'));
 
       final response7 =
-          await http.get(Uri.parse('http://192.168.1.6:5200/following-count'));
-        
-      final response8 = await http.get(Uri.parse('http://192.168.1.11:5000/images'));
+          await http.get(Uri.parse('http://192.168.0.109:5200/following-count'));
+
+      final response8 =
+         await http.get(Uri.parse('http://192.168.0.109:5200/image-text-paths'));
 
       if (response.statusCode == 200) {
+        
         setState(() {
           dict = json.decode(response.body);
           dict1 = json.decode(response1.body);
@@ -66,6 +65,10 @@ class _DataScreenState extends State<DataScreen> {
           dict5 = json.decode(response5.body);
           dict6 = json.decode(response6.body);
           dict7 = json.decode(response7.body);
+          final List<String> urls = List<String>.from(json.decode(response8.body));
+          
+          imageUrls = urls;
+
 
           profileURL = dict3['profile_path'];
 
@@ -84,20 +87,6 @@ class _DataScreenState extends State<DataScreen> {
       });
     }
   }
-
-   if (response.statusCode == 200) {
-        final List<String> urls = List<String>.from(json.decode(response.body));
-        setState(() {
-          imageUrls = urls;
-        });
-      } else {
-        print('Failed to fetch image URLs: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error fetching image URLs: $error');
-    }
-  
-
 
   @override
   void initState() {
@@ -405,10 +394,68 @@ class _DataScreenState extends State<DataScreen> {
                             ]),
                 ), // Your content for this section
               ),
-            ]),
+
+              Container(
+                                width: MediaQuery.of(context).size.width,
+                                color: Color.fromRGBO(96, 130, 182, 1),
+                                child: Center(
+                                  child: Text('Offensive Images',
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+
+
+              Container(
+                height: 100,
+                color: Color.fromRGBO(211, 211, 211, 1),
+
+                child: Center( child:
+
+                   ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ApiImageList()),
+                  );
+                },
+                child: Text('Click to View Images'),
+              ),
+  
           )
-        ]),
-      ),
-    );
+          )
+
+           ]   ),
+              )
+               
+            ]),
+          ),
+        
+        
+      );
+    
+
   }
 }
+    
+      
+
+              
+
+
+        
+
+          
+        
+    
+      
+
+      
+  
+  
+
+
+
+
+

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ssip/pages/insta.dart';
-import 'package:ssip/reddit%20pages/options.dart';
+import 'package:ssip/reddit pages/options.dart';
 import 'package:ssip/tele pages/login.dart';
 
 class LogIn extends StatelessWidget {

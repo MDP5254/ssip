@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:ssip/pages/data.dart';
+import 'package:ssip/reddit pages/dataredi.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -50,15 +50,7 @@ class RedditOptions extends StatelessWidget {
                 child: const Text('Track SubReddit'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => RedditLoginPopUp(),
-                  );
-                },
-                child: const Text('Track Post by URL'),
-              ),
+              
             ],
           ),
         ),
@@ -119,7 +111,7 @@ Remember to use this app responsibly and respect the privacy and terms of use of
               ? () {
                   Navigator.of(context).pop(true);
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => RedditPostURL(),
+                    builder: (context) =>RedditSubReddit(),
                   ));
                 }
               : null,
@@ -193,125 +185,6 @@ Remember to use this app responsibly and respect the privacy and terms of use of
   }
 }
 
-class RedditPostURL extends StatefulWidget {
-  @override
-  _RedditPostURLState createState() => _RedditPostURLState();
-}
-
-class _RedditPostURLState extends State<RedditPostURL> {
-  final TextEditingController _controller1 = TextEditingController();
-  bool _isLoading = false;
-  var _loginStatus = '';
-
-  void dispose() {
-    _controller1.dispose();
-    super.dispose();
-  }
-
-  Future<void> login(BuildContext context) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final String PostUrl = _controller1.text;
-
-    final response = await http.post(
-      Uri.parse('http://192.168.15.75:5200/posturl'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        <String, String>{'posturl': PostUrl},
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      setState(() {
-        _loginStatus = 'Login successful';
-      });
-      // Handle navigation or other actions here
-      // print('Login successful');
-
-      Navigator.pop(context);
-    } else {
-      setState(() {
-        _loginStatus = 'Login failed';
-        throw Exception('Failed to load data');
-      });
-      // Show an error message or navigate back
-      Navigator.pop(context);
-      // print('Login failed');
-      AlertDialog(
-        title: const Text('Login failed'),
-        content: const Text('Please try again'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      );
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/redditbg.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: SizedBox(
-            height: 300,
-            width: 300,
-            child: Column(
-              children: [
-                TextField(
-                  controller: _controller1,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.white,
-                    filled: true,
-                    labelText: 'Post URL',
-                    hintText: 'Enter Post URL',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : () => login(context),
-                  child: const Text('Submit'),
-                ),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  Text(_loginStatus, style: TextStyle(color: Colors.red)),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class RedditSubReddit extends StatefulWidget {
   @override
@@ -336,12 +209,12 @@ class _RedditSubRedditState extends State<RedditSubReddit> {
     final String SubRedditval = _controller1.text;
 
     final response = await http.post(
-      Uri.parse('http://192.168.15.75:5200/subreddit'),
+      Uri.parse('http://192.168.0.109:5000/reddit-login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-        <String, String>{'subreddit': SubRedditval},
+        <String, String>{'subreddit_name': SubRedditval},
       ),
     );
 
@@ -353,6 +226,9 @@ class _RedditSubRedditState extends State<RedditSubReddit> {
       // print('Login successful');
 
       Navigator.pop(context);
+       Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ApiImageList()),);
     } else {
       setState(() {
         _loginStatus = 'Login failed';

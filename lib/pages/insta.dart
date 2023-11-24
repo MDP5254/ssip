@@ -78,7 +78,7 @@ Using this app may involve certain risks and can lead to actions taken by Instag
 
 Remember to use this app responsibly and respect the privacy and terms of use of other users on Instagram. Your digital safety and online reputation are important. 
 ''',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 15.0),
           ),
           const SizedBox(height: 10),
           Row(
@@ -146,7 +146,7 @@ class _UsernamePasswordState extends State<UsernamePassword> {
     final String passwordval = _controller2.text;
 
     final response = await http.post(
-      Uri.parse('http://192.168.1.6:5200/login'),
+      Uri.parse('http://192.168.0.109:5200/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
